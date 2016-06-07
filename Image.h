@@ -9,11 +9,25 @@
 * Data......: 06/06/2016                                      
 *-------------------------------------------------------------*/ 
 
-struct Image {
+#ifndef IMAGE
+#define IMAGE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+    
+typedef struct  {
     int ** image;
     int width;
     int height;
     int color_shades;
     char format[10];
-};
+} Image;
 
+int read_pgm(Image *, char *);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* IMAGE */
