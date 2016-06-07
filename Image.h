@@ -9,9 +9,6 @@
 * Data......: 06/06/2016                                      
 *-------------------------------------------------------------*/ 
 
-#include <stdio.h>
-#include <stdlib.h>
-
 struct Image {
     int ** image;
     int width;
