@@ -26,6 +26,10 @@ typedef struct  {
 
 int read_pgm(Image *, char *);
 
+void initialize_image(Image *, int, int);
+
+int threashold_image(Image *, Image *, int);
+
 #ifdef __cplusplus
 }
 #endif

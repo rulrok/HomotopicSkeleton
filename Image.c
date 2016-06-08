@@ -63,10 +63,37 @@ int read_pgm(Image *image, char * filePath) {
             //printf("%3d\n", image->image[i][j]);
         }
     }
-    
+
     fclose(fp);
     if (line)
         free(line);
     return 0;
 }
 
+void initialize_image(Image *I, int height, int width) {
+    
+    I->width = width;
+    I->height = height;
+    I->image = malloc(sizeof (int *) * height);
+
+    for (int i = 0; i < height; i++) {
+        I->image[i] = malloc(sizeof (int) * width);
+    }
+}
+
+int threashold_image(Image *I, Image *O, int threashold) {
+
+    if (threashold > I->color_shades) {
+        return 0;
+    }
+
+    initialize_image(O, I->height, I->width);
+    strcpy(O->format, "P1");
+    O->color_shades = 2;
+
+    for (int i = 0; i < I->height; i++)
+        for (int j = 0; j < I->width; j++)
+            O->image[i][j] = (int) (I->image[i][j] > threashold) ? 1 : 0;
+
+    return 1;
+}

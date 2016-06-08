@@ -18,8 +18,11 @@
 int main(int argc, char** argv) {
 
     Image * pgm_image = malloc(sizeof(Image));
+    Image * new_image = malloc(sizeof(Image));
     
     read_pgm(pgm_image, "./moi.pgm");
+    
+    threashold_image(pgm_image, new_image, 7);
     
     free(pgm_image);
     
