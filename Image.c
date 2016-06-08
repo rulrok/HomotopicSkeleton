@@ -60,7 +60,7 @@ int read_pgm(Image *image, char * filePath) {
         for (int j = 0; j < image->width; j++) {
             fscanf(fp, "%d", &value);
             image->image[i][j] = value;
-            printf("%3d\n", image->image[i][j]);
+            //printf("%3d\n", image->image[i][j]);
         }
     }
     
