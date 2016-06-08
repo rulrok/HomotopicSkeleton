@@ -48,12 +48,7 @@ int read_pgm(Image *image, char * filePath) {
     //    printf("The file contains %d color shades\n", colorShades);
 
     image->color_shades = colorShades;
-
-    image->image = malloc(sizeof (int *) * height);
-
-    for (int i = 0; i < height; i++) {
-        image->image[i] = malloc(sizeof (int) * width);
-    }
+    initialize_image(image, height, width);
 
     int value;
     for (int i = 0; i < image->height; i++) {
