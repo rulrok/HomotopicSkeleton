@@ -18,15 +18,15 @@
 int main(int argc, char** argv) {
 
     Image * pgm_image = malloc(sizeof(Image));
-    Image * new_image = malloc(sizeof(Image));
+    Image * pbm_image = malloc(sizeof(Image));
     
     read_pgm(pgm_image, "./moi.pgm");
     
-    threashold_image(pgm_image, new_image, 5);
+    threashold_image(pgm_image, pbm_image, 5);
     
-    save_pgm(new_image, "./moi.pbm");
+    save_pgm(pbm_image, "./moi.pbm");
     
-    free(new_image);
+    free(pbm_image);
     free(pgm_image);
     
     return (EXIT_SUCCESS);
