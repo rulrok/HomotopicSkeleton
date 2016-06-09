@@ -24,6 +24,8 @@ typedef struct  {
     char format[10];
 } Image;
 
+int save_pgm(Image *, char *);
+
 int read_pgm(Image *, char *);
 
 void initialize_image(Image *, int, int);

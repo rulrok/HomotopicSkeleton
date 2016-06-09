@@ -13,6 +13,35 @@
 #include <string.h>
 #include "Image.h"
 
+int save_pgm(Image *image, char * filePath) {
+    FILE *fp;
+
+    fp = fopen(filePath, "w");
+    if (!fp) {
+        return 1;
+    }
+
+    //Format
+    fprintf(fp, "%s\n", image->format);
+
+    //Comment
+    fprintf(fp, "#Binary image\n");
+
+    //Dimensions
+    fprintf(fp, "%d %d\n", image->width, image->height);
+
+    //Color shades
+    fprintf(fp, "%d\n", image->color_shades);
+
+    //Image
+    for (int i = 0; i < image->height; i++) {
+        for (int j = 0; j < image->width; j++) {
+            fprintf(fp, "%d ", image->image[i][j]);
+        }
+        fprintf(fp, "\n");
+    }
+}
+
 int read_pgm(Image *image, char * filePath) {
 
     FILE *fp;
@@ -66,7 +95,7 @@ int read_pgm(Image *image, char * filePath) {
 }
 
 void initialize_image(Image *I, int height, int width) {
-    
+
     I->width = width;
     I->height = height;
     I->image = malloc(sizeof (int *) * height);
