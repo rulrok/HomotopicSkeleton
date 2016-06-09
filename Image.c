@@ -94,6 +94,22 @@ int read_pgm(Image *image, char * filePath) {
     return 0;
 }
 
+int copy_image(Image *in, Image *out) {
+    strcpy(out->format, in->format);
+    out->color_shades = in->color_shades;
+    out->height = in->height;
+    out->width = in->width;
+
+    initialize_image(out, in->height, in->width);
+
+    for (int i = 0; i < in->height; i++) {
+        for (int j = 0; j < in->width; j++) {
+            out->image[i][j] = in->image[i][j];
+        }
+    }
+
+}
+
 void initialize_image(Image *I, int height, int width) {
 
     I->width = width;
