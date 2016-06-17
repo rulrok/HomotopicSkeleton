@@ -15,23 +15,30 @@
 #define TRUE 1
 #define FALSE 0
 
-int mask_rotations_fit(Image *Im, int mask[3][3], int centerLine, int centerColumn) {
+int mask_fit(Image *Im, int mask[3][3], int centerLine, int centerColumn) {
 
-    for(int i = -1; i < 2; i++){
-        for(int j = -1; j < 2; j++){
-            if (mask[centerLine + i][centerColumn + j] == 1){
-                if (Im->image[centerLine + i][centerColumn + j] != 1){
+    for (int i = -1; i < 2; i++) {
+        for (int j = -1; j < 2; j++) {
+            if (mask[centerLine + i][centerColumn + j] == 1) {
+                if (Im->image[centerLine + i][centerColumn + j] != 1) {
                     return FALSE;
                 }
-            } else if (mask[centerLine + i][centerColumn + j] == 0){
-                if (Im->image[centerLine + i][centerColumn + j] != 0){
+            } else if (mask[centerLine + i][centerColumn + j] == 0) {
+                if (Im->image[centerLine + i][centerColumn + j] != 0) {
                     return FALSE;
                 }
             }
         }
     }
-    
+
     return TRUE;
+
+}
+
+int mask_rotations_fit(Image *Im, int mask[3][3], int centerLine, int centerColumn) {
+
+    return TRUE;
+
 }
 
 Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
