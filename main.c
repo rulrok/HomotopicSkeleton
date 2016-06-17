@@ -12,16 +12,43 @@
 #include <stdlib.h>
 #include "Image.h"
 
-Image * erode_image(Image *image, int arr1[3][3], int arr2[3][3]) {
+#define TRUE 1
+#define FALSE 0
 
-    Image * out = malloc(sizeof (Image));
-    copy_image(image, out);
+int mask_rotations_fit(Image *Im, int mask[3][3]) {
+
+    return TRUE;
+}
+
+Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
+
+    Image * Out = malloc(sizeof (Image));
+    copy_image(Im, Out);
 
     Image * aux = malloc(sizeof (Image));
-    initialize_image(aux, out->height, out->width);
+    initialize_image(aux, Out->height, Out->width);
+
+    int changed;
+    while (changed) {
+        changed = FALSE;
+
+        //Ignore the border, thus i = j = 1 up to dimensions - 1
+        for (int i = 1; i < Im->height - 1; i++) {
+            for (int j = 1; j < Im->width - 1; j++) {
+                //Apply rotations to the point aux[i][j]
+                if (mask_rotations_fit(Im, SE1)) {
+                    //If match, update out[i][j] & set changed = 1
+                    Out->image[i][j] = Im->image[i][j];
+                    changed = TRUE;
+                }
+
+            }
+        }
 
 
-    return out;
+    }
+
+    return Out;
 }
 
 /*
