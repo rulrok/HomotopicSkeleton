@@ -15,8 +15,22 @@
 #define TRUE 1
 #define FALSE 0
 
-int mask_rotations_fit(Image *Im, int mask[3][3]) {
+int mask_rotations_fit(Image *Im, int mask[3][3], int centerLine, int centerColumn) {
 
+    for(int i = -1; i < 2; i++){
+        for(int j = -1; j < 2; j++){
+            if (mask[centerLine + i][centerColumn + j] == 1){
+                if (Im->image[centerLine + i][centerColumn + j] != 1){
+                    return FALSE;
+                }
+            } else if (mask[centerLine + i][centerColumn + j] == 0){
+                if (Im->image[centerLine + i][centerColumn + j] != 0){
+                    return FALSE;
+                }
+            }
+        }
+    }
+    
     return TRUE;
 }
 
@@ -36,7 +50,7 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
         for (int i = 1; i < Im->height - 1; i++) {
             for (int j = 1; j < Im->width - 1; j++) {
                 //Apply rotations to the point aux[i][j]
-                if (mask_rotations_fit(Im, SE1)) {
+                if (mask_rotations_fit(Im, SE1, i, j)) {
                     //If match, update out[i][j] & set changed = 1
                     Out->image[i][j] = Im->image[i][j];
                     changed = TRUE;
