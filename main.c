@@ -70,9 +70,9 @@ void print_matrix(size_t lines, size_t columns, int M[lines][columns], int num, 
     }
 }
 
-void rotate_square_matrix(size_t lines, size_t columns, int M[lines][columns], int O[lines][columns]){
-    for(int i = 0; i < lines; i++){
-        for(int j = 0; j < columns; j++){
+void rotate_square_matrix(size_t dim, int M[dim][dim], int O[dim][dim]){
+    for(int i = 0; i < dim; i++){
+        for(int j = 0; j < dim; j++){
             O[j][2 - i] = M[i][j];
         }
     }
