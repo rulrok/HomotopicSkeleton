@@ -78,7 +78,10 @@ void rotate_square_matrix(size_t dim, int M[dim][dim], int O[dim][dim]) {
     }
 }
 
-int mask_fit(Image *Im, int mask[3][3], int centerLine, int centerColumn) {
+int mask_fit(Image *Im, int mask[3][3]) {
+
+    int centerLine = 1;
+    int centerColumn = 1;
 
     for (int i = -1; i < 2; i++) {
         for (int j = -1; j < 2; j++) {
@@ -99,7 +102,8 @@ int mask_fit(Image *Im, int mask[3][3], int centerLine, int centerColumn) {
 }
 
 int mask_rotations_fit(Image *Im, int rot1[3][3], int rot2[3][3], int rot3[3][3], int rot4[3][3]) {
-    return TRUE;
+
+    return (mask_fit(Im, rot1) || mask_fit(Im, rot2) || mask_fit(Im, rot3) || mask_fit(Im, rot4));
 
 }
 
