@@ -70,6 +70,14 @@ void print_matrix(size_t lines, size_t columns, int M[lines][columns], int num, 
     }
 }
 
+void rotate_square_matrix(size_t lines, size_t columns, int M[lines][columns], int O[lines][columns]){
+    for(int i = 0; i < lines; i++){
+        for(int j = 0; j < columns; j++){
+            O[j][2 - i] = M[i][j];
+        }
+    }
+}
+
 int mask_fit(Image *Im, int mask[3][3], int centerLine, int centerColumn) {
 
     for (int i = -1; i < 2; i++) {
@@ -146,7 +154,6 @@ int main(int argc, char** argv) {
         {1, 1, 1},
         {2, 1, 2}
     };
-    print_matrix(3, 3, M1);
 
     int M2[3][3] = {
         2, 0, 0,
