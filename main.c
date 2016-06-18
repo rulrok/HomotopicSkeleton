@@ -119,17 +119,17 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
     int SEr2[3][3];
     rotate_square_matrix(3, SE1, SEr2);
     int SEr3[3][3];
-    rotate_square_matrix(3, SE1, SEr3);
+    rotate_square_matrix(3, SEr2, SEr3);
     int SEr4[3][3];
-    rotate_square_matrix(3, SE1, SEr4);
+    rotate_square_matrix(3, SEr3, SEr4);
 
     //Prepare the other rotations for the other structuring element
     int SE2r2[3][3];
     rotate_square_matrix(3, SE2, SE2r2);
     int SE2r3[3][3];
-    rotate_square_matrix(3, SE2, SE2r3);
+    rotate_square_matrix(3, SE2r2, SE2r3);
     int SE2r4[3][3];
-    rotate_square_matrix(3, SE2, SE2r4);
+    rotate_square_matrix(3, SE2r3, SE2r4);
 
     int changed;
     while (changed) {
