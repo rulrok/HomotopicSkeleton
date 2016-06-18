@@ -113,8 +113,8 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
     Image * Out = malloc(sizeof (Image));
     copy_image(Im, Out);
 
-    Image * aux = malloc(sizeof (Image));
-    initialize_image(aux, Out->height, Out->width);
+    Image * Aux = malloc(sizeof (Image));
+    initialize_image(Aux, Out->height, Out->width);
 
     //Prepare the other rotations for the structuring element
     int SE1r2[3][3];
@@ -133,22 +133,32 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
     rotate_square_matrix(3, SE2r3, SE2r4);
 
     int changed;
-    while (changed) {
+    while (TRUE) {
         changed = FALSE;
 
+        printf("\n");
+        print_matrix(Aux->height, Aux->width, Aux->image, 0);
         //Ignore the border, thus i = j = 1 up to dimensions - 1
         for (int i = 1; i < Im->height - 1; i++) {
             for (int j = 1; j < Im->width - 1; j++) {
                 //Apply rotations to the point aux[i][j]
-                if (mask_rotations_fit(Im, i, j, SE1, SE1r2, SE1r3, SE1r4)) {
+                if (mask_rotations_fit(Aux, i, j, SE1, SE1r2, SE1r3, SE1r4)) {
                     //If match, update out[i][j] & set changed = 1
-                    Out->image[i][j] = Im->image[i][j];
+                    Out->image[i][j] = 1;
                     changed = TRUE;
+                } else {
+                    Out->image[i][j] = 0;
                 }
 
             }
         }
+        if (!changed) {
+            return Out;
+        }
 
+        Image * switchPtr = Aux;
+        Aux = Out;
+        Out = switchPtr;
 
     }
 
@@ -163,7 +173,7 @@ int main(int argc, char** argv) {
     Image * pgm_image = malloc(sizeof (Image));
     Image * pbm_image = malloc(sizeof (Image));
 
-    read_pgm(pgm_image, "./moi.pgm");
+    read_pgm(pgm_image, "./feep.pgm");
 
     threashold_image(pgm_image, pbm_image, pgm_image->color_shades / 3);
     //
