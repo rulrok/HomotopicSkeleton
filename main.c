@@ -70,9 +70,9 @@ void print_matrix(size_t lines, size_t columns, int M[lines][columns], int num, 
     }
 }
 
-void rotate_square_matrix(size_t dim, int M[dim][dim], int O[dim][dim]){
-    for(int i = 0; i < dim; i++){
-        for(int j = 0; j < dim; j++){
+void rotate_square_matrix(size_t dim, int M[dim][dim], int O[dim][dim]) {
+    for (int i = 0; i < dim; i++) {
+        for (int j = 0; j < dim; j++) {
             O[j][2 - i] = M[i][j];
         }
     }
@@ -98,8 +98,7 @@ int mask_fit(Image *Im, int mask[3][3], int centerLine, int centerColumn) {
 
 }
 
-int mask_rotations_fit(Image *Im, int mask[3][3], int centerLine, int centerColumn) {
-
+int mask_rotations_fit(Image *Im, int rot1[3][3], int rot2[3][3], int rot3[3][3], int rot4[3][3]) {
     return TRUE;
 
 }
@@ -112,6 +111,22 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
     Image * aux = malloc(sizeof (Image));
     initialize_image(aux, Out->height, Out->width);
 
+    //Prepare the other rotations for the structuring element
+    int SEr2[3][3];
+    rotate_square_matrix(3, SE1, SEr2);
+    int SEr3[3][3];
+    rotate_square_matrix(3, SE1, SEr3);
+    int SEr4[3][3];
+    rotate_square_matrix(3, SE1, SEr4);
+
+    //Prepare the other rotations for the other structuring element
+    int SE2r2[3][3];
+    rotate_square_matrix(3, SE2, SE2r2);
+    int SE2r3[3][3];
+    rotate_square_matrix(3, SE2, SE2r3);
+    int SE2r4[3][3];
+    rotate_square_matrix(3, SE2, SE2r4);
+
     int changed;
     while (changed) {
         changed = FALSE;
@@ -120,7 +135,7 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
         for (int i = 1; i < Im->height - 1; i++) {
             for (int j = 1; j < Im->width - 1; j++) {
                 //Apply rotations to the point aux[i][j]
-                if (mask_rotations_fit(Im, SE1, i, j)) {
+                if (mask_rotations_fit(Im, SE1, SEr2, SEr3, SEr4)) {
                     //If match, update out[i][j] & set changed = 1
                     Out->image[i][j] = Im->image[i][j];
                     changed = TRUE;
