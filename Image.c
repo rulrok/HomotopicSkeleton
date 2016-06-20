@@ -25,13 +25,14 @@ int save_pgm(Image *image, char * filePath) {
     fprintf(fp, "%s\n", image->format);
 
     //Comment
-    fprintf(fp, "#Binary image\n");
+    fprintf(fp, "# Processed on Netbeans\n");
 
     //Dimensions
     fprintf(fp, "%d %d\n", image->columns, image->lines);
 
     //Color shades
-    fprintf(fp, "%d\n", image->color_shades);
+    if (strcmp(image->format, "P1"))
+        fprintf(fp, "%d\n", image->color_shades);
 
     //Image
     for (int i = 0; i < image->lines; i++) {
