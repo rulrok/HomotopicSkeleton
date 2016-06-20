@@ -32,7 +32,7 @@ extern "C" {
 
     void initialize_image(Image *, int, int);
 
-    int threshold_image(Image *, Image *, int);
+    int pgm_to_pbm(Image *, Image *, int);
 
 #ifdef __cplusplus
 }
