@@ -35,9 +35,17 @@ int save_pgm(Image *image, char * filePath) {
         fprintf(fp, "%d\n", image->color_shades);
 
     //Image
+    char * format;
+    if (!strcmp(image->format, "P1")) {
+        //If image is a PBM
+        format = "%d";
+    } else {
+        //If image is PGM
+        format = "%d ";
+    }
     for (int i = 0; i < image->lines; i++) {
         for (int j = 0; j < image->columns; j++) {
-            fprintf(fp, "%d ", image->image[i * image->columns + j]);
+            fprintf(fp, format, image->image[i * image->columns + j]);
         }
         fprintf(fp, "\n");
     }
@@ -87,9 +95,17 @@ int read_pgm(Image *image, char * filePath) {
     initialize_image(image, height, width);
 
     int value;
+    char * format;
+    if (!strcmp(image->format, "P1")) {
+        //If image is a PBM
+        format = "%1d"; //Read only one digit
+    } else {
+        //If image is PGM
+        format = "%d";
+    }
     for (int i = 0; i < image->lines; i++) {
         for (int j = 0; j < image->columns; j++) {
-            fscanf(fp, "%d", &value);
+            fscanf(fp, format, &value);
             image->image[i * image->columns + j] = value;
         }
     }
