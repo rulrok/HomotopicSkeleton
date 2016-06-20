@@ -36,10 +36,14 @@ int save_pgm(Image *image, char * filePath) {
     //Image
     for (int i = 0; i < image->lines; i++) {
         for (int j = 0; j < image->columns; j++) {
-            fprintf(fp, "%d ", image->image[i*image->columns + j]);
+            fprintf(fp, "%d ", image->image[i * image->columns + j]);
         }
         fprintf(fp, "\n");
     }
+
+    fclose(fp);
+
+    return 0;
 }
 
 int read_pgm(Image *image, char * filePath) {
@@ -83,7 +87,7 @@ int read_pgm(Image *image, char * filePath) {
     for (int i = 0; i < image->lines; i++) {
         for (int j = 0; j < image->columns; j++) {
             fscanf(fp, "%d", &value);
-            image->image[i* image->columns + j] = value;
+            image->image[i * image->columns + j] = value;
         }
     }
 
@@ -128,7 +132,7 @@ int threashold_image(Image *I, Image *O, int threashold) {
 
     for (int i = 0; i < I->lines; i++)
         for (int j = 0; j < I->columns; j++)
-            O->image[i* O->columns +j] = (int) (I->image[i* I->columns +j] > threashold) ? 1 : 0;
+            O->image[i * O->columns + j] = (int) (I->image[i * I->columns + j] > threashold) ? 1 : 0;
 
     return 1;
 }
