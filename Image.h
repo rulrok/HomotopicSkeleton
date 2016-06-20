@@ -32,7 +32,7 @@ extern "C" {
 
     void initialize_image(Image *, int, int);
 
-    int threashold_image(Image *, Image *, int);
+    int threshold_image(Image *, Image *, int);
 
 #ifdef __cplusplus
 }

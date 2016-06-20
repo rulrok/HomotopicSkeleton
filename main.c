@@ -183,7 +183,7 @@ int main(int argc, char** argv) {
 
     read_pgm(pgm_image, "./moi.pgm");
 
-    threashold_image(pgm_image, pbm_image, pgm_image->color_shades / 3);
+    threshold_image(pgm_image, pbm_image, pgm_image->color_shades / 3);
     //
     //    save_pgm(pbm_image, "./moi.pbm");
 

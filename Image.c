@@ -120,7 +120,7 @@ void initialize_image(Image *I, int height, int width) {
     I->image = malloc(sizeof (int *) * height * width);
 }
 
-int threashold_image(Image *I, Image *O, int threashold) {
+int threshold_image(Image *I, Image *O, int threashold) {
 
     if (threashold > I->color_shades) {
         return 0;
@@ -132,7 +132,7 @@ int threashold_image(Image *I, Image *O, int threashold) {
 
     for (int i = 0; i < I->lines; i++)
         for (int j = 0; j < I->columns; j++)
-            O->image[i * O->columns + j] = (int) (I->image[i * I->columns + j] > threashold) ? 1 : 0;
+            O->image[i * O->columns + j] = (int) (I->image[i * I->columns + j] > threashold) ? 0 : 1;
 
     return 1;
 }
