@@ -17,7 +17,7 @@ extern "C" {
 #endif
 
     typedef struct {
-        int ** image;
+        int * image;
         int width;
         int height;
         int color_shades;

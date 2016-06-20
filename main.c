@@ -28,7 +28,7 @@
  * endLine - The final line to be printed
  * endColumn - The final column to be printed
  */
-void print_matrix(size_t lines, size_t columns, int M[lines][columns], int num, ...) {
+void print_matrix(int lines, int columns, int *M, int num, ...) {
 
     va_list list;
 
@@ -64,7 +64,7 @@ void print_matrix(size_t lines, size_t columns, int M[lines][columns], int num, 
     printf("Matrix[%d][%d]\n", (int) lines, (int) columns);
     for (int i = startLine; i < endLine; i++) {
         for (int j = startColumn; j < endColumn; j++) {
-            printf("%d,", M[i][j]);
+            printf("%d,", M[i * columns + j]);
         }
         printf("\n");
     }
@@ -84,11 +84,11 @@ int mask_fit(Image *Im, int mask[3][3], int x, int y) {
     for (int i = -1; i < 2; i++) {
         for (int j = -1; j < 2; j++) {
             if (mask[x + i][y + j] == 1) {
-                if (Im->image[x + i][y + j] != 1) {
+                if (Im->image[(x + i) * Im->width + (y + j)] != 1) {
                     return FALSE;
                 }
             } else if (mask[x + i][y + j] == 0) {
-                if (Im->image[x + i][y + j] != 0) {
+                if (Im->image[(x + i) * Im->width + (y + j)] != 0) {
                     return FALSE;
                 }
             }
@@ -111,10 +111,10 @@ int mask_rotations_fit(Image *Im, int x, int y, int rot1[3][3], int rot2[3][3], 
 Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
 
     Image * Out = malloc(sizeof (Image));
-    copy_image(Im, Out);
+    initialize_image(Out, Im->height, Im->width);
 
     Image * Aux = malloc(sizeof (Image));
-    initialize_image(Aux, Out->height, Out->width);
+    copy_image(Im, Aux);
 
     //Prepare the other rotations for the structuring element
     int SE1r2[3][3];
@@ -144,10 +144,10 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
                 //Apply rotations to the point aux[i][j]
                 if (mask_rotations_fit(Aux, i, j, SE1, SE1r2, SE1r3, SE1r4)) {
                     //If match, update out[i][j] & set changed = 1
-                    Out->image[i][j] = 1;
+                    Out->image[i * Out->width + j] = 1;
                     changed = TRUE;
                 } else {
-                    Out->image[i][j] = 0;
+                    Out->image[i * Out->width + j] = 0;
                 }
 
             }
@@ -178,7 +178,7 @@ int main(int argc, char** argv) {
     threashold_image(pgm_image, pbm_image, pgm_image->color_shades / 3);
     //
     //    save_pgm(pbm_image, "./moi.pbm");
-
+    
     int M1[3][3] = {
         {2, 0, 0},
         {1, 1, 1},

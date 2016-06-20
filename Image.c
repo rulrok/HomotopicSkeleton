@@ -36,7 +36,7 @@ int save_pgm(Image *image, char * filePath) {
     //Image
     for (int i = 0; i < image->height; i++) {
         for (int j = 0; j < image->width; j++) {
-            fprintf(fp, "%d ", image->image[i][j]);
+            fprintf(fp, "%d ", image->image[i*image->width + j]);
         }
         fprintf(fp, "\n");
     }
@@ -83,8 +83,7 @@ int read_pgm(Image *image, char * filePath) {
     for (int i = 0; i < image->height; i++) {
         for (int j = 0; j < image->width; j++) {
             fscanf(fp, "%d", &value);
-            image->image[i][j] = value;
-            //printf("%3d\n", image->image[i][j]);
+            image->image[i* image->width + j] = value;
         }
     }
 
@@ -104,7 +103,7 @@ int copy_image(Image *in, Image *out) {
 
     for (int i = 0; i < in->height; i++) {
         for (int j = 0; j < in->width; j++) {
-            out->image[i][j] = in->image[i][j];
+            out->image[i * out->width + j] = in->image[i * in->width + j];
         }
     }
 
@@ -114,11 +113,7 @@ void initialize_image(Image *I, int height, int width) {
 
     I->width = width;
     I->height = height;
-    I->image = malloc(sizeof (int *) * height);
-
-    for (int i = 0; i < height; i++) {
-        I->image[i] = malloc(sizeof (int) * width);
-    }
+    I->image = malloc(sizeof (int *) * height * width);
 }
 
 int threashold_image(Image *I, Image *O, int threashold) {
@@ -133,7 +128,7 @@ int threashold_image(Image *I, Image *O, int threashold) {
 
     for (int i = 0; i < I->height; i++)
         for (int j = 0; j < I->width; j++)
-            O->image[i][j] = (int) (I->image[i][j] > threashold) ? 1 : 0;
+            O->image[i* O->width +j] = (int) (I->image[i* I->width +j] > threashold) ? 1 : 0;
 
     return 1;
 }
