@@ -100,7 +100,7 @@ int mask_fit(Image *Im, int mask[3][3], int x, int y) {
 
 }
 
-int mask_rotations_fit(Image *Im, int x, int y, int rot1[3][3], int rot2[3][3], int rot3[3][3], int rot4[3][3]) {
+int any_mask_rotation_fit(Image *Im, int x, int y, int rot1[3][3], int rot2[3][3], int rot3[3][3], int rot4[3][3]) {
 
     return (mask_fit(Im, rot1, x, y) ||
             mask_fit(Im, rot2, x, y) ||
@@ -142,7 +142,7 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
         for (int i = 1; i < Aux->lines - 1; i++) {
             for (int j = 1; j < Aux->columns - 1; j++) {
                 //Apply rotations to the point aux[i][j]
-                if (mask_rotations_fit(Aux, i, j, SE1, SE1r2, SE1r3, SE1r4)) {
+                if (any_mask_rotation_fit(Aux, i, j, SE1, SE1r2, SE1r3, SE1r4)) {
                     //If match, update out[i][j] & set changed = 1
                     Out->image[i * Out->columns + j] = 1;
                     changed = TRUE;
