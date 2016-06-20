@@ -56,11 +56,10 @@ int read_pgm(Image *image, char * filePath) {
 
     char * line = NULL;
     size_t len = 0;
-    ssize_t lineSize;
 
     //image format
     getline(&line, &len, fp);
-    strcpy(line, image->format);
+    sscanf(line, "%s", image->format);
 
     //Comment
     getline(&line, &len, fp);
@@ -75,10 +74,13 @@ int read_pgm(Image *image, char * filePath) {
     image->lines = height;
 
     //Color shades
-    getline(&line, &len, fp);
     int colorShades;
-    sscanf(line, "%d", &colorShades);
-    //    printf("The file contains %d color shades\n", colorShades);
+    if (!strcmp(image->format, "P1")) {
+        colorShades = 2;
+    } else {
+        getline(&line, &len, fp);
+        sscanf(line, "%d", &colorShades);
+    }
 
     image->color_shades = colorShades;
     initialize_image(image, height, width);
