@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <string.h>
 #include "Image.h"
 
 #define TRUE 1
@@ -111,7 +112,7 @@ int mask_rotations_fit(Image *Im, int x, int y, int rot1[3][3], int rot2[3][3], 
 Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
 
     Image * Out = malloc(sizeof (Image));
-    initialize_image(Out, Im->lines, Im->columns);
+    copy_image(Im, Out);
 
     Image * Aux = malloc(sizeof (Image));
     copy_image(Im, Aux);
@@ -133,14 +134,13 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
     rotate_square_matrix(3, SE2r3, SE2r4);
 
     int changed;
+    int steps = 1;
     while (TRUE) {
         changed = FALSE;
 
-        printf("\n");
-        print_matrix(Aux->lines, Aux->columns, Aux->image, 0);
         //Ignore the border, thus i = j = 1 up to dimensions - 1
-        for (int i = 1; i < Im->lines - 1; i++) {
-            for (int j = 1; j < Im->columns - 1; j++) {
+        for (int i = 1; i < Aux->lines - 1; i++) {
+            for (int j = 1; j < Aux->columns - 1; j++) {
                 //Apply rotations to the point aux[i][j]
                 if (mask_rotations_fit(Aux, i, j, SE1, SE1r2, SE1r3, SE1r4)) {
                     //If match, update out[i][j] & set changed = 1
@@ -152,9 +152,17 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
 
             }
         }
+
+        //        printf("\n");
+        //        print_matrix(Out->lines, Out->columns, Out->image, 0);
+        char out_filename[80];
+        sprintf(out_filename, "./out.%d.pbm", steps);
+        save_pgm(Out, out_filename);
+
         if (!changed) {
             return Out;
         }
+        steps++;
 
         Image * switchPtr = Aux;
         Aux = Out;
@@ -173,7 +181,7 @@ int main(int argc, char** argv) {
     Image * pgm_image = malloc(sizeof (Image));
     Image * pbm_image = malloc(sizeof (Image));
 
-    read_pgm(pgm_image, "./feep.pgm");
+    read_pgm(pgm_image, "./moi.pgm");
 
     threashold_image(pgm_image, pbm_image, pgm_image->color_shades / 3);
     //
