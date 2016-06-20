@@ -18,8 +18,8 @@ extern "C" {
 
     typedef struct {
         int * image;
-        int width;
-        int height;
+        int columns;
+        int lines;
         int color_shades;
         char format[10];
     } Image;

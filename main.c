@@ -84,11 +84,11 @@ int mask_fit(Image *Im, int mask[3][3], int x, int y) {
     for (int i = -1; i < 2; i++) {
         for (int j = -1; j < 2; j++) {
             if (mask[x + i][y + j] == 1) {
-                if (Im->image[(x + i) * Im->width + (y + j)] != 1) {
+                if (Im->image[(x + i) * Im->columns + (y + j)] != 1) {
                     return FALSE;
                 }
             } else if (mask[x + i][y + j] == 0) {
-                if (Im->image[(x + i) * Im->width + (y + j)] != 0) {
+                if (Im->image[(x + i) * Im->columns + (y + j)] != 0) {
                     return FALSE;
                 }
             }
@@ -111,7 +111,7 @@ int mask_rotations_fit(Image *Im, int x, int y, int rot1[3][3], int rot2[3][3], 
 Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
 
     Image * Out = malloc(sizeof (Image));
-    initialize_image(Out, Im->height, Im->width);
+    initialize_image(Out, Im->lines, Im->columns);
 
     Image * Aux = malloc(sizeof (Image));
     copy_image(Im, Aux);
@@ -137,17 +137,17 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
         changed = FALSE;
 
         printf("\n");
-        print_matrix(Aux->height, Aux->width, Aux->image, 0);
+        print_matrix(Aux->lines, Aux->columns, Aux->image, 0);
         //Ignore the border, thus i = j = 1 up to dimensions - 1
-        for (int i = 1; i < Im->height - 1; i++) {
-            for (int j = 1; j < Im->width - 1; j++) {
+        for (int i = 1; i < Im->lines - 1; i++) {
+            for (int j = 1; j < Im->columns - 1; j++) {
                 //Apply rotations to the point aux[i][j]
                 if (mask_rotations_fit(Aux, i, j, SE1, SE1r2, SE1r3, SE1r4)) {
                     //If match, update out[i][j] & set changed = 1
-                    Out->image[i * Out->width + j] = 1;
+                    Out->image[i * Out->columns + j] = 1;
                     changed = TRUE;
                 } else {
-                    Out->image[i * Out->width + j] = 0;
+                    Out->image[i * Out->columns + j] = 0;
                 }
 
             }

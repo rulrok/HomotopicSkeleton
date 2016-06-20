@@ -28,15 +28,15 @@ int save_pgm(Image *image, char * filePath) {
     fprintf(fp, "#Binary image\n");
 
     //Dimensions
-    fprintf(fp, "%d %d\n", image->width, image->height);
+    fprintf(fp, "%d %d\n", image->columns, image->lines);
 
     //Color shades
     fprintf(fp, "%d\n", image->color_shades);
 
     //Image
-    for (int i = 0; i < image->height; i++) {
-        for (int j = 0; j < image->width; j++) {
-            fprintf(fp, "%d ", image->image[i*image->width + j]);
+    for (int i = 0; i < image->lines; i++) {
+        for (int j = 0; j < image->columns; j++) {
+            fprintf(fp, "%d ", image->image[i*image->columns + j]);
         }
         fprintf(fp, "\n");
     }
@@ -67,8 +67,8 @@ int read_pgm(Image *image, char * filePath) {
     sscanf(line, "%d %d", &width, &height);
     //    printf("Width is: %d and height is: %d\n", width, height);
 
-    image->width = width;
-    image->height = height;
+    image->columns = width;
+    image->lines = height;
 
     //Color shades
     getline(&line, &len, fp);
@@ -80,10 +80,10 @@ int read_pgm(Image *image, char * filePath) {
     initialize_image(image, height, width);
 
     int value;
-    for (int i = 0; i < image->height; i++) {
-        for (int j = 0; j < image->width; j++) {
+    for (int i = 0; i < image->lines; i++) {
+        for (int j = 0; j < image->columns; j++) {
             fscanf(fp, "%d", &value);
-            image->image[i* image->width + j] = value;
+            image->image[i* image->columns + j] = value;
         }
     }
 
@@ -96,14 +96,14 @@ int read_pgm(Image *image, char * filePath) {
 int copy_image(Image *in, Image *out) {
     strcpy(out->format, in->format);
     out->color_shades = in->color_shades;
-    out->height = in->height;
-    out->width = in->width;
+    out->lines = in->lines;
+    out->columns = in->columns;
 
-    initialize_image(out, in->height, in->width);
+    initialize_image(out, in->lines, in->columns);
 
-    for (int i = 0; i < in->height; i++) {
-        for (int j = 0; j < in->width; j++) {
-            out->image[i * out->width + j] = in->image[i * in->width + j];
+    for (int i = 0; i < in->lines; i++) {
+        for (int j = 0; j < in->columns; j++) {
+            out->image[i * out->columns + j] = in->image[i * in->columns + j];
         }
     }
 
@@ -111,8 +111,8 @@ int copy_image(Image *in, Image *out) {
 
 void initialize_image(Image *I, int height, int width) {
 
-    I->width = width;
-    I->height = height;
+    I->columns = width;
+    I->lines = height;
     I->image = malloc(sizeof (int *) * height * width);
 }
 
@@ -122,13 +122,13 @@ int threashold_image(Image *I, Image *O, int threashold) {
         return 0;
     }
 
-    initialize_image(O, I->height, I->width);
+    initialize_image(O, I->lines, I->columns);
     strcpy(O->format, "P1");
     O->color_shades = 2;
 
-    for (int i = 0; i < I->height; i++)
-        for (int j = 0; j < I->width; j++)
-            O->image[i* O->width +j] = (int) (I->image[i* I->width +j] > threashold) ? 1 : 0;
+    for (int i = 0; i < I->lines; i++)
+        for (int j = 0; j < I->columns; j++)
+            O->image[i* O->columns +j] = (int) (I->image[i* I->columns +j] > threashold) ? 1 : 0;
 
     return 1;
 }
