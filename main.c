@@ -178,7 +178,7 @@ int main(int argc, char** argv) {
     threashold_image(pgm_image, pbm_image, pgm_image->color_shades / 3);
     //
     //    save_pgm(pbm_image, "./moi.pbm");
-    
+
     int M1[3][3] = {
         {2, 0, 0},
         {1, 1, 1},
@@ -186,9 +186,9 @@ int main(int argc, char** argv) {
     };
 
     int M2[3][3] = {
-        2, 0, 0,
-        1, 1, 1,
-        2, 1, 2
+        {2, 0, 0},
+        {1, 1, 1},
+        {2, 1, 2}
     };
 
     Image * eroded_image = erode_image(pbm_image, M1, M2);
