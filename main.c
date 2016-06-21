@@ -102,6 +102,7 @@ int mask_fit(Image *Im, int mask[3][3], int x, int y) {
 
 int any_mask_rotation_fit(Image *Im, int x, int y, int rot1[3][3], int rot2[3][3], int rot3[3][3], int rot4[3][3]) {
 
+//    print_matrix(Im->lines, Im->columns, Im->image, 4, x - 1, y - 1, x + 1, y + 1);
     return (mask_fit(Im, rot1, x, y) ||
             mask_fit(Im, rot2, x, y) ||
             mask_fit(Im, rot3, x, y) ||
@@ -116,6 +117,8 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
 
     Image * Aux = malloc(sizeof (Image));
     copy_image(Im, Aux);
+    
+    save_pgm(Aux, "out.0.pbm");
 
     //Prepare the other rotations for the structuring element
     int SE1r2[3][3];
@@ -142,7 +145,7 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
         for (int i = 1; i < Aux->lines - 1; i++) {
             for (int j = 1; j < Aux->columns - 1; j++) {
                 //Apply rotations to the point aux[i][j]
-                if (any_mask_rotation_fit(Aux, i, j, SE1, SE1r2, SE1r3, SE1r4) &&
+                if (any_mask_rotation_fit(Aux, i, j, SE1, SE1r2, SE1r3, SE1r4) ||
                         any_mask_rotation_fit(Aux, i, j, SE2, SE2r2, SE2r3, SE2r4)) {
                     //If match, update out[i][j] & set changed = 1
                     Out->image[i * Out->columns + j] = 0;
@@ -182,21 +185,21 @@ int main(int argc, char** argv) {
     Image * pgm_image = malloc(sizeof (Image));
     Image * pbm_image = malloc(sizeof (Image));
 
-    read_pgm(pgm_image, "./feep.pgm");
+    read_pgm(pgm_image, "./body.pbm");
 
     pgm_to_pbm(pgm_image, pbm_image, pgm_image->color_shades / 3);
     //
     //    save_pgm(pbm_image, "./moi.pbm");
 
     int M1[3][3] = {
-        {2, 0, 0},
+        {2, 0, 2},
         {1, 1, 1},
         {2, 1, 2}
     };
 
     int M2[3][3] = {
         {2, 0, 0},
-        {1, 1, 1},
+        {1, 1, 2},
         {2, 1, 2}
     };
 
