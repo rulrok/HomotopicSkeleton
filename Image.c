@@ -151,7 +151,7 @@ int pgm_to_pbm(Image *I, Image *O, int threshold) {
 
     for (int i = 0; i < I->lines; i++)
         for (int j = 0; j < I->columns; j++)
-            O->image[i * O->columns + j] = (int) (I->image[i * I->columns + j] > threshold) ? 0 : 1;
+            O->image[i * O->columns + j] = (int) (I->image[i * I->columns + j] > threshold) ? 1 : 0;
 
     return 1;
 }
