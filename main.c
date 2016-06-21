@@ -127,6 +127,8 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
     rotate_square_matrix(3, SE1r2, SE1r3);
     int SE1r4[3][3];
     rotate_square_matrix(3, SE1r3, SE1r4);
+    int SE1r1[3][3];
+    rotate_square_matrix(3, SE1r4, SE1r1);
 
     //Prepare the other rotations for the other structuring element
     int SE2r2[3][3];
@@ -135,6 +137,8 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
     rotate_square_matrix(3, SE2r2, SE2r3);
     int SE2r4[3][3];
     rotate_square_matrix(3, SE2r3, SE2r4);
+    int SE2r1[3][3];
+    rotate_square_matrix(3, SE2r3, SE2r1);
 
     int changed;
     int steps = 1;
@@ -145,8 +149,7 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
         for (int i = 1; i < Aux->lines - 1; i++) {
             for (int j = 1; j < Aux->columns - 1; j++) {
                 //Apply rotations to the point aux[i][j]
-                if (any_mask_rotation_fit(Aux, i, j, SE1, SE1r2, SE1r3, SE1r4) ||
-                        any_mask_rotation_fit(Aux, i, j, SE2, SE2r2, SE2r3, SE2r4)) {
+                if (any_mask_rotation_fit(Aux, i, j, SE1r1, SE1r2, SE1r3, SE1r4)) {
                     //If match, update out[i][j] & set changed = 1
                     Out->image[i * Out->columns + j] = 0;
                     changed = TRUE;
@@ -203,8 +206,6 @@ int main(int argc, char** argv) {
         {2, 1, 2}
     };
 
-    Image * eroded_image = erode_image(pbm_image, M1, M2);
-
     int L1[3][3] = {
         0, 0, 0,
         2, 1, 2,
@@ -215,6 +216,8 @@ int main(int argc, char** argv) {
         1, 1, 1,
         2, 1, 2
     };
+    
+    Image * eroded_image = erode_image(pbm_image, M1, M2);
 
     free(pbm_image);
     free(pgm_image);
