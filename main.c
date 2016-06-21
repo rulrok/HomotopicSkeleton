@@ -37,8 +37,8 @@ void print_matrix(int lines, int columns, int *M, int num, ...) {
 
     int startLine = 0;
     int startColumn = 0;
-    int endLine = lines;
-    int endColumn = columns;
+    int endLine = lines - 1;
+    int endColumn = columns - 1;
 
     switch (num) {
         case 1:
@@ -63,8 +63,8 @@ void print_matrix(int lines, int columns, int *M, int num, ...) {
 
     va_end(list);
     printf("Matrix[%d][%d]\n", (int) lines, (int) columns);
-    for (int i = startLine; i < endLine; i++) {
-        for (int j = startColumn; j < endColumn; j++) {
+    for (int i = startLine; i <= endLine; i++) {
+        for (int j = startColumn; j <= endColumn; j++) {
             printf("%d,", M[i * columns + j]);
         }
         printf("\n");
@@ -142,12 +142,13 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
         for (int i = 1; i < Aux->lines - 1; i++) {
             for (int j = 1; j < Aux->columns - 1; j++) {
                 //Apply rotations to the point aux[i][j]
-                if (any_mask_rotation_fit(Aux, i, j, SE1, SE1r2, SE1r3, SE1r4)) {
+                if (any_mask_rotation_fit(Aux, i, j, SE1, SE1r2, SE1r3, SE1r4) &&
+                        any_mask_rotation_fit(Aux, i, j, SE2, SE2r2, SE2r3, SE2r4)) {
                     //If match, update out[i][j] & set changed = 1
-                    Out->image[i * Out->columns + j] = 1;
+                    Out->image[i * Out->columns + j] = 0;
                     changed = TRUE;
                 } else {
-                    Out->image[i * Out->columns + j] = 0;
+                    Out->image[i * Out->columns + j] = 1;
                 }
 
             }
@@ -181,7 +182,7 @@ int main(int argc, char** argv) {
     Image * pgm_image = malloc(sizeof (Image));
     Image * pbm_image = malloc(sizeof (Image));
 
-    read_pgm(pgm_image, "./moi.pgm");
+    read_pgm(pgm_image, "./feep.pgm");
 
     pgm_to_pbm(pgm_image, pbm_image, pgm_image->color_shades / 3);
     //
