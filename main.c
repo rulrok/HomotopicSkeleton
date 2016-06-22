@@ -116,10 +116,10 @@ int any_mask_rotation_fit(Image *Im, int x, int y, int rot1[3][3], int rot2[3][3
             mask_fit(Im, &rot2[0][0], x, y) ||
             mask_fit(Im, &rot3[0][0], x, y) ||
             mask_fit(Im, &rot4[0][0], x, y));
-//    if (r > 0) {
-//        print_matrix(Im->lines, Im->columns, Im->image, 4, x - 1, y - 1, x + 1, y + 1);
-//        r = 1;
-//    }
+    //    if (r > 0) {
+    //        print_matrix(Im->lines, Im->columns, Im->image, 4, x - 1, y - 1, x + 1, y + 1);
+    //        r = 1;
+    //    }
     return r;
 }
 
@@ -130,8 +130,6 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
 
     Image * Aux = malloc(sizeof (Image));
     copy_image(Im, Aux);
-
-    save_pgm(Aux, "out.0.pbm");
 
     //Prepare the other rotations for the structuring element
     int SE1r2[3][3];
@@ -154,9 +152,15 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
     rotate_square_matrix(3, SE2r3, SE2r1);
 
     int changed;
-    int steps = 1;
+    int steps = 0;
+    char out_filename[80];
+    Image * switchPtr;
     while (TRUE) {
         changed = FALSE;
+
+        //Save each steps
+        sprintf(out_filename, "./output/out.%d.pbm", steps++);
+        save_pgm(Out, out_filename);
 
         //Ignore the border, thus i = j = 1 up to dimensions - 1
         for (int i = 1; i < Aux->lines - 1; i++) {
@@ -173,21 +177,13 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
             }
         }
 
-        //        printf("\n");
-        //        print_matrix(Out->lines, Out->columns, Out->image, 0);
-        char out_filename[80];
-        sprintf(out_filename, "./out.%d.pbm", steps);
-        save_pgm(Out, out_filename);
+        switchPtr = Aux;
+        Aux = Out;
+        Out = switchPtr;
 
         if (!changed) {
             return Out;
         }
-        steps++;
-
-        Image * switchPtr = Aux;
-        Aux = Out;
-        Out = switchPtr;
-
     }
 
     return Out;
