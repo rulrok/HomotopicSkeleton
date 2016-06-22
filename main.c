@@ -80,34 +80,47 @@ void rotate_square_matrix(size_t dim, int M[dim][dim], int O[dim][dim]) {
     }
 }
 
-int mask_fit(Image *Im, int mask[3][3], int x, int y) {
+int mask_fit(Image *Im, int *mask, int x, int y) {
 
-    for (int i = -1; i < 2; i++) {
-        for (int j = -1; j < 2; j++) {
-            if (mask[x + i][y + j] == 1) {
-                if (Im->image[(x + i) * Im->columns + (y + j)] != 1) {
-                    return FALSE;
-                }
-            } else if (mask[x + i][y + j] == 0) {
-                if (Im->image[(x + i) * Im->columns + (y + j)] != 0) {
-                    return FALSE;
-                }
+    for (int image_line = -1, mask_line = 0; image_line <= 1; image_line++, mask_line++) {
+        for (int image_column = -1, mask_column = 0; image_column <= 1; image_column++, mask_column++) {
+            int maskValue = mask[mask_line * 3 + mask_column];
+            switch (maskValue) {
+                case 0:
+                    if (Im->image[(x + image_line) * Im->columns + (y + image_column)] != 0) {
+                        return FALSE;
+                    }
+                    break;
+                case 1:
+                    if (Im->image[(x + image_line) * Im->columns + (y + image_column)] != 1) {
+                        return FALSE;
+                    }
+                    break;
+                case 2:
+                    //It can be anything
+                    break;
+                default:
+                    //The mask has an invalid value
+                    exit(EXIT_FAILURE);
             }
         }
     }
 
     return TRUE;
-
 }
 
 int any_mask_rotation_fit(Image *Im, int x, int y, int rot1[3][3], int rot2[3][3], int rot3[3][3], int rot4[3][3]) {
 
-//    print_matrix(Im->lines, Im->columns, Im->image, 4, x - 1, y - 1, x + 1, y + 1);
-    return (mask_fit(Im, rot1, x, y) ||
-            mask_fit(Im, rot2, x, y) ||
-            mask_fit(Im, rot3, x, y) ||
-            mask_fit(Im, rot4, x, y));
 
+    int r = (mask_fit(Im, &rot1[0][0], x, y) ||
+            mask_fit(Im, &rot2[0][0], x, y) ||
+            mask_fit(Im, &rot3[0][0], x, y) ||
+            mask_fit(Im, &rot4[0][0], x, y));
+//    if (r > 0) {
+//        print_matrix(Im->lines, Im->columns, Im->image, 4, x - 1, y - 1, x + 1, y + 1);
+//        r = 1;
+//    }
+    return r;
 }
 
 Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
@@ -117,7 +130,7 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
 
     Image * Aux = malloc(sizeof (Image));
     copy_image(Im, Aux);
-    
+
     save_pgm(Aux, "out.0.pbm");
 
     //Prepare the other rotations for the structuring element
@@ -216,7 +229,7 @@ int main(int argc, char** argv) {
         1, 1, 1,
         2, 1, 2
     };
-    
+
     Image * eroded_image = erode_image(pbm_image, M1, M2);
 
     free(pbm_image);
