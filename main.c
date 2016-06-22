@@ -167,7 +167,7 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
                     Out->image[i * Out->columns + j] = 0;
                     changed = TRUE;
                 } else {
-                    Out->image[i * Out->columns + j] = 1;
+                    Out->image[i * Out->columns + j] = Aux->image[i * Aux->columns + j];
                 }
 
             }
