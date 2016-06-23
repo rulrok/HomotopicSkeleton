@@ -112,15 +112,12 @@ int mask_fit(Image *Im, int *mask, int x, int y) {
 int any_mask_rotation_fit(Image *Im, int x, int y, int rot1[3][3], int rot2[3][3], int rot3[3][3], int rot4[3][3]) {
 
 
-    int r = (mask_fit(Im, &rot1[0][0], x, y) ||
-            mask_fit(Im, &rot2[0][0], x, y) ||
-            mask_fit(Im, &rot3[0][0], x, y) ||
-            mask_fit(Im, &rot4[0][0], x, y));
-    //    if (r > 0) {
-    //        print_matrix(Im->lines, Im->columns, Im->image, 4, x - 1, y - 1, x + 1, y + 1);
-    //        r = 1;
-    //    }
-    return r;
+    int r1 = mask_fit(Im, &rot1[0][0], x, y);
+    int r2 = mask_fit(Im, &rot2[0][0], x, y);
+    int r3 = mask_fit(Im, &rot3[0][0], x, y);
+    int r4 = mask_fit(Im, &rot4[0][0], x, y);
+
+    return r1 || r2 || r3 || r4;
 }
 
 Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
@@ -167,11 +164,9 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
             for (int j = 1; j < Aux->columns - 1; j++) {
                 //Apply rotations to the point aux[i][j]
 
-                if (
-                        any_mask_rotation_fit(Aux, i, j, SE1r1, SE1r2, SE1r3, SE1r4)
-                        ||
-                        any_mask_rotation_fit(Aux, i, j, SE2r1, SE2r2, SE2r3, SE2r4)
-                        ) {
+                int fit1 = any_mask_rotation_fit(Aux, i, j, SE1r1, SE1r2, SE1r3, SE1r4);
+                int fit2 = any_mask_rotation_fit(Aux, i, j, SE2r1, SE2r2, SE2r3, SE2r4);
+                if (fit1 || fit2) {
                     //If match, update out[i][j] & set changed = 1
                     Out->image[i * Out->columns + j] = 0;
                     changed = TRUE;
