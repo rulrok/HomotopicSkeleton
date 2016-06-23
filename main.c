@@ -166,7 +166,12 @@ Image * erode_image(Image *Im, int SE1[3][3], int SE2[3][3]) {
         for (int i = 1; i < Aux->lines - 1; i++) {
             for (int j = 1; j < Aux->columns - 1; j++) {
                 //Apply rotations to the point aux[i][j]
-                if (any_mask_rotation_fit(Aux, i, j, SE1r1, SE1r2, SE1r3, SE1r4)) {
+
+                if (
+                        any_mask_rotation_fit(Aux, i, j, SE1r1, SE1r2, SE1r3, SE1r4)
+                        ||
+                        any_mask_rotation_fit(Aux, i, j, SE2r1, SE2r2, SE2r3, SE2r4)
+                        ) {
                     //If match, update out[i][j] & set changed = 1
                     Out->image[i * Out->columns + j] = 0;
                     changed = TRUE;
