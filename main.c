@@ -202,36 +202,25 @@ int main(int argc, char** argv) {
     Image * pgm_image = malloc(sizeof (Image));
     Image * pbm_image = malloc(sizeof (Image));
 
-    read_pgm(pgm_image, "./body.pbm");
-
+    read_pgm(pgm_image, "./squares.pbm");
     pgm_to_pbm(pgm_image, pbm_image, pgm_image->color_shades / 3);
     //
     //    save_pgm(pbm_image, "./moi.pbm");
 
-    int M1[3][3] = {
-        {2, 0, 2},
-        {1, 1, 1},
-        {2, 1, 2}
+    //Family for thinning
+    int m1[3][3] = {
+        {0, 0, 0},
+        {2, 1, 2},
+        {1, 1, 1}
     };
 
-    int M2[3][3] = {
+    int m2[3][3] = {
         {2, 0, 0},
-        {1, 1, 2},
-        {2, 1, 2}
+        {1, 0, 0},
+        {1, 1, 2}
     };
 
-    int L1[3][3] = {
-        0, 0, 0,
-        2, 1, 2,
-        1, 1, 1
-    };
-    int L2[3][3] = {
-        2, 0, 2,
-        1, 1, 1,
-        2, 1, 2
-    };
-
-    Image * eroded_image = erode_image(pbm_image, M1, M2);
+    Image * eroded_image = erode_image(pbm_image, m1, m2);
 
     free(pbm_image);
     free(pgm_image);
